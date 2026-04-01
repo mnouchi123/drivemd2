@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DriveMD2">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxODAgMTgwIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImJnSWNvbiIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjEiPjxzdG9wIG9mZnNldD0iMCUiIHN0b3AtY29sb3I9IiM0YzFkOTUiLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxZTFiNGIiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgcng9IjQwIiBmaWxsPSJ1cmwoI2JnSWNvbikiLz48cGF0aCBkPSJNIDM2IDQ4IEwgNzQgNDggQyA3NyA0OCA4MCA1MCA4MiA1MyBMIDg4IDYxIEMgOTAgNjQgOTMgNjYgOTYgNjYgTCAxNDQgNjYgQyAxNTAgNjYgMTU0IDcwIDE1NCA3NiBMIDE1NCAxMjIgQyAxNTQgMTI4IDE1MCAxMzIgMTQ0IDEzMiBMIDM2IDEzMiBDIDMwIDEzMiAyNiAxMjggMjYgMTIyIEwgMjYgNTggQyAyNiA1MiAzMCA0OCAzNiA0OCBaIE0gNzIgNzAgTCA4NCA4NyBMIDYwIDg3IFogTSAxMDggNzAgTCAxMjAgODcgTCA5NiA4NyBaIE0gNzIgOTIgTCA5MCAxMTggTCA1NCAxMTggWiBNIDEwOCA5MiBMIDEyNiAxMTggTCA5MCAxMTggWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PC9zdmc+Cg==">
+<title>DriveMD2</title>
+
+<!-- M PLUS Rounded 1c - rounded gothic font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Marked.js for Markdown -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<!-- highlight.js for syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+<style>
+:root {
+  --bg: #0f0f14;
+  --bg-surface: #1a1a24;
+  --bg-elevated: #22222e;
+  --bg-hover: #2a2a38;
+  --border: #2d2d3d;
+  --border-light: #3a3a4d;
+  --text-primary: #e0d6c8;
+  --text-secondary: #9a9aae;
+  --text-muted: #6a6a7e;
+  --accent: #7c6f5b;
+  --accent-hover: #9a8b74;
+  --accent-glow: rgba(124,111,91,0.15);
+  --blue: #5b7c9a;
+  --green: #5b9a6f;
+  --red: #c4746e;
+  --yellow: #c4a84e;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --header-h: 56px;
+  --toolbar-h: 48px;
+  --font-size: 15px;
+}
+
+body.light {
+  --bg: #fafaf7;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f0ede8;
+  --bg-hover: #e8e4de;
+  --border: #ddd8d0;
+  --border-light: #e8e4de;
+  --text-primary: #2a2420;
+  --text-secondary: #6b6560;
+  --text-muted: #9b9590;
+  --accent: #7c6f5b;
+  --accent-hover: #5a4f3e;
+  --accent-glow: rgba(124,111,91,0.12);
+  --blue: #3a6080;
+  --green: #3a7a50;
+  --red: #a04040;
+  --yellow: #a08030;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  overflow: hidden;
+  height: 100vh;
+  height: 100dvh;
+  position: fixed;
+  width: 100%;
+  -webkit-font-smoothing: antialiased;
+  font-size: var(--font-size);
+}
+
+/* ═══ SCREENS ═══ */
+.screen { display:none; flex-direction:column; height:100dvh; position:absolute; inset:0; background:var(--bg); z-index:1; }
+.screen.active { display:flex; z-index:2; }
+
+/* ═══ HEADER ═══ */
+.header {
+  display:flex; align-items:center; gap:12px;
+  padding: calc(var(--safe-top) + 8px) 16px 8px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  min-height: calc(var(--header-h) + var(--safe-top));
+  flex-shrink: 0;
+}
+.header-title { font-size:17px; font-weight:600; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.header-btn {
+  width:36px; height:36px; border:none; background:none; color:var(--text-primary);
+  display:flex; align-items:center; justify-content:center; border-radius:var(--radius-sm);
+  cursor:pointer; flex-shrink:0; font-size:20px;
+  transition: background .15s;
+}
+.header-btn:hover, .header-btn:active { background:var(--bg-hover); }
+.header-btn svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+
+/* ═══ LOGIN SCREEN ═══ */
+#login-screen {
+  justify-content:center; align-items:center; gap:32px;
+  background: linear-gradient(160deg, var(--bg) 0%, #16161f 100%);
+}
+.login-logo {
+  font-size:48px; font-weight:700; letter-spacing:-2px;
+  color: var(--text-primary);
+  font-family: 'Montserrat', sans-serif;
+}
+.login-logo span { color:var(--accent); }
+.login-sub { color:var(--text-secondary); font-size:14px; margin-top:-20px; text-align:center; line-height:1.6; }
+.login-btn {
+  display:flex; align-items:center; gap:10px;
+  padding:14px 28px; border-radius:var(--radius);
+  background:var(--bg-elevated); border:1px solid var(--border);
+  color:var(--text-primary); font-size:15px; font-weight:500;
+  cursor:pointer; transition: all .2s;
+}
+.login-btn:hover { background:var(--bg-hover); border-color:var(--border-light); }
+.login-btn svg { width:20px; height:20px; }
+.login-settings {
+  position:absolute; bottom:calc(var(--safe-bottom) + 24px);
+  color:var(--text-muted); font-size:13px; cursor:pointer;
+  text-decoration:underline; text-underline-offset:3px;
+}
+
+/* ═══ SETTINGS MODAL ═══ */
+.modal-overlay {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.6);
+  z-index:100; align-items:flex-end; justify-content:center;
+  animation: fadeIn .2s;
+}
+.modal-overlay.show { display:flex; }
+.modal-sheet {
+  background:var(--bg-surface); border-radius:var(--radius) var(--radius) 0 0;
+  width:100%; max-width:480px; max-height:70vh; padding:24px 20px calc(var(--safe-bottom) + 24px);
+  animation: slideUp .3s cubic-bezier(.22,1,.36,1);
+}
+.modal-handle { width:36px; height:4px; background:var(--border-light); border-radius:2px; margin:0 auto 20px; }
+.modal-title { font-size:17px; font-weight:600; margin-bottom:16px; }
+.input-group { margin-bottom:16px; }
+.input-label { font-size:13px; color:var(--text-secondary); margin-bottom:6px; display:block; }
+.input-field {
+  width:100%; padding:12px 14px; background:var(--bg-elevated); border:1px solid var(--border);
+  border-radius:var(--radius-sm); color:var(--text-primary); font-size:15px; outline:none;
+  transition: border-color .2s;
+}
+.input-field:focus { border-color:var(--accent); }
+.modal-btn {
+  width:100%; padding:14px; border:none; border-radius:var(--radius-sm);
+  background:var(--accent); color:#fff; font-size:15px; font-weight:600;
+  cursor:pointer; transition: background .2s;
+}
+.modal-btn:hover { background:var(--accent-hover); }
+
+/* ═══ FILE LIST SCREEN ═══ */
+.toolbar {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 12px; background:var(--bg-surface);
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.search-box {
+  flex:1; display:flex; align-items:center; gap:8px;
+  background:var(--bg-elevated); border:1px solid var(--border);
+  border-radius:var(--radius-sm); padding:0 12px; height:38px;
+  transition: border-color .2s;
+}
+.search-box:focus-within { border-color:var(--accent); }
+.search-box svg { width:16px; height:16px; stroke:var(--text-muted); fill:none; stroke-width:2; flex-shrink:0; }
+.search-box input {
+  flex:1; border:none; background:none; color:var(--text-primary);
+  font-size:14px; outline:none;
+}
+.search-box input::placeholder { color:var(--text-muted); }
+
+.sort-btn {
+  height:38px; padding:0 12px; border:1px solid var(--border);
+  background:var(--bg-elevated); border-radius:var(--radius-sm);
+  color:var(--text-secondary); font-size:12px; cursor:pointer;
+  display:flex; align-items:center; gap:4px; white-space:nowrap;
+  transition: all .15s;
+}
+.sort-btn:hover { border-color:var(--border-light); color:var(--text-primary); }
+.sort-btn svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:2; }
+
+.tabs {
+  display:flex; gap:0; background:var(--bg-surface);
+  border-bottom:1px solid var(--border); flex-shrink:0;
+}
+.tab {
+  flex:1; padding:10px 0; text-align:center; font-size:13px; font-weight:500;
+  color:var(--text-muted); cursor:pointer; border-bottom:2px solid transparent;
+  transition: all .2s;
+}
+.tab.active { color:var(--text-primary); border-bottom-color:var(--accent); }
+
+/* Breadcrumb */
+.breadcrumb {
+  display:flex; align-items:center; gap:4px; padding:8px 16px;
+  font-size:13px; color:var(--text-muted); overflow-x:auto;
+  flex-shrink:0; white-space:nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+.breadcrumb::-webkit-scrollbar { display:none; }
+.bc-item { cursor:pointer; color:var(--text-secondary); transition:color .15s; flex-shrink:0; }
+.bc-item:hover { color:var(--text-primary); }
+.bc-sep { color:var(--border-light); flex-shrink:0; }
+.bc-current { color:var(--text-primary); font-weight:500; flex-shrink:0; }
+
+.file-list {
+  flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding-bottom:calc(var(--safe-bottom) + 80px);
+}
+
+.file-item {
+  display:flex; align-items:center; gap:14px;
+  padding:14px 16px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition: background .15s;
+}
+.file-item:active { background:var(--bg-hover); }
+.file-icon {
+  width:40px; height:40px; border-radius:var(--radius-sm);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; font-size:18px;
+}
+.file-icon.folder { background:rgba(91,124,154,.15); color:var(--blue); }
+.file-icon.md { background:rgba(124,111,91,.15); color:var(--accent); }
+.file-icon.other { background:var(--bg-elevated); color:var(--text-muted); }
+.file-icon svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.8; }
+.file-info { flex:1; min-width:0; }
+.file-name { font-size:15px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.file-meta { font-size:12px; color:var(--text-muted); margin-top:2px; }
+.file-bookmark {
+  width:32px; height:32px; display:flex; align-items:center; justify-content:center;
+  border:none; background:none; cursor:pointer; flex-shrink:0;
+  color:var(--text-muted); transition:color .15s;
+}
+.file-bookmark.active { color:var(--yellow); }
+.file-bookmark svg { width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:2; }
+.file-bookmark.active svg { fill:var(--yellow); }
+
+.empty-state {
+  flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:var(--text-muted); gap:8px; padding:40px;
+}
+.empty-state svg { width:48px; height:48px; stroke:var(--border-light); fill:none; stroke-width:1.2; }
+
+/* FAB */
+.fab {
+  position:fixed; bottom:calc(var(--safe-bottom) + 24px); right:20px;
+  width:52px; height:52px; border-radius:50%; border:none;
+  background:var(--accent); color:#fff; font-size:28px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; box-shadow:0 4px 20px rgba(124,111,91,.3);
+  transition: transform .15s, background .15s; z-index:10;
+}
+.fab:active { transform:scale(.92); }
+
+/* ═══ VIEWER SCREEN ═══ */
+.viewer-content {
+  flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  padding: 20px 18px calc(var(--safe-bottom) + 20px);
+  font-size: var(--font-size); line-height: 1.75;
+}
+
+/* Markdown Styles */
+.viewer-content h1 { font-size:1.55em; font-weight:700; margin:28px 0 14px; color:var(--text-primary); border-bottom:1px solid var(--border); padding-bottom:8px; }
+.viewer-content h2 { font-size:1.3em; font-weight:600; margin:24px 0 12px; color:var(--text-primary); }
+.viewer-content h3 { font-size:1.1em; font-weight:600; margin:20px 0 10px; color:var(--text-primary); }
+.viewer-content h4, .viewer-content h5, .viewer-content h6 { font-size:1em; font-weight:600; margin:16px 0 8px; }
+.viewer-content p { margin:0 0 14px; }
+.viewer-content a { color:var(--blue); text-decoration:none; }
+.viewer-content a:hover { text-decoration:underline; }
+.viewer-content ul, .viewer-content ol { padding-left:24px; margin:0 0 14px; }
+.viewer-content li { margin:4px 0; }
+.viewer-content blockquote {
+  border-left:3px solid var(--accent); padding:8px 16px; margin:0 0 14px;
+  background:var(--accent-glow); color:var(--text-secondary); border-radius:0 var(--radius-sm) var(--radius-sm) 0;
+}
+.viewer-content code {
+  background:var(--bg-elevated); padding:2px 6px; border-radius:4px;
+  font-family:'SF Mono','Menlo',monospace; font-size:13.5px; color:var(--accent-hover);
+}
+.viewer-content pre {
+  background:#161620; border:1px solid var(--border); border-radius:var(--radius-sm);
+  padding:16px; margin:0 0 14px; overflow-x:auto; -webkit-overflow-scrolling:touch;
+}
+.viewer-content pre code { background:none; padding:0; color:var(--text-primary); font-size:13px; line-height:1.6; }
+.viewer-content table { width:100%; border-collapse:collapse; margin:0 0 14px; font-size:14px; }
+.viewer-content th, .viewer-content td { border:1px solid var(--border); padding:8px 12px; text-align:left; }
+.viewer-content th { background:var(--bg-elevated); font-weight:600; }
+.viewer-content img { max-width:100%; height:auto; border-radius:var(--radius-sm); }
+.viewer-content hr { border:none; border-top:1px solid var(--border); margin:20px 0; }
+
+/* TOC Panel */
+.toc-panel {
+  position:fixed; top:0; right:-300px; width:280px; height:100dvh;
+  background:var(--bg-surface); border-left:1px solid var(--border);
+  z-index:50; transition:right .3s cubic-bezier(.22,1,.36,1);
+  display:flex; flex-direction:column;
+  padding-top:var(--safe-top);
+}
+.toc-panel.open { right:0; }
+.toc-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:49; }
+.toc-overlay.show { display:block; }
+.toc-header { padding:16px; border-bottom:1px solid var(--border); font-weight:600; font-size:15px; display:flex; justify-content:space-between; align-items:center; }
+.toc-list { flex:1; overflow-y:auto; padding:12px 0; }
+.toc-item {
+  display:block; padding:8px 16px; font-size:14px; color:var(--text-secondary);
+  cursor:pointer; transition:all .15s; text-decoration:none; border:none; background:none; width:100%; text-align:left;
+}
+.toc-item:hover, .toc-item:active { background:var(--bg-hover); color:var(--text-primary); }
+.toc-item[data-level="2"] { padding-left:32px; font-size:13px; }
+.toc-item[data-level="3"] { padding-left:48px; font-size:12px; color:var(--text-muted); }
+
+/* ═══ EDITOR SCREEN ═══ */
+.editor-area {
+  flex:1; overflow:hidden; display:flex; flex-direction:column;
+}
+.editor-textarea {
+  flex:1; width:100%; border:none; background:var(--bg);
+  color:var(--text-primary); font-family:'SF Mono','Menlo',monospace;
+  font-size:var(--font-size); line-height:1.7; padding:16px 18px calc(var(--safe-bottom) + 20px);
+  resize:none; outline:none;
+  -webkit-overflow-scrolling:touch;
+}
+
+/* ═══ NEW FILE MODAL ═══ */
+.new-file-modal .modal-sheet { max-height:50vh; }
+
+/* ═══ LOADING ═══ */
+.spinner {
+  width:24px; height:24px; border:2.5px solid var(--border);
+  border-top-color:var(--accent); border-radius:50%;
+  animation:spin .7s linear infinite; margin:40px auto;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+@keyframes fadeIn { from{opacity:0}to{opacity:1} }
+@keyframes slideUp { from{transform:translateY(100%)}to{transform:translateY(0)} }
+
+/* ═══ TOAST ═══ */
+.toast {
+  position:fixed; bottom:calc(var(--safe-bottom) + 80px); left:50%; transform:translateX(-50%);
+  background:var(--bg-elevated); border:1px solid var(--border);
+  padding:10px 20px; border-radius:var(--radius); font-size:14px;
+  color:var(--text-primary); z-index:200; opacity:0; transition:opacity .3s;
+  pointer-events:none;
+}
+.toast.show { opacity:1; }
+
+/* ═══ USER AVATAR ═══ */
+.user-avatar {
+  width:32px; height:32px; border-radius:50%; border:2px solid var(--border);
+  cursor:pointer; object-fit:cover;
+}
+
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar { width:4px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+</style>
+</head>
+
+<body>
+
+<!-- ═══ FILE LIST SCREEN ═══ -->
+<div id="list-screen" class="screen active">
+  <div class="header">
+    <button class="header-btn" id="back-folder-btn" onclick="goUpFolder()" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="header-title" id="list-title">Obsidian_Vault</div>
+    <button class="header-btn" onclick="refreshList()" title="再読み込み">
+      <svg viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>
+    </button>
+    <button class="header-btn" onclick="showSettings()" title="API設定">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09A1.65 1.65 0 0015 4.6a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06A1.65 1.65 0 0019.4 9c.36.21.8.32 1.26.32H21a2 2 0 010 4h-.09c-.46 0-.9.11-1.51.68z"/></svg>
+    </button>
+    <button class="header-btn" id="theme-btn-list" onclick="toggleTheme()" title="テーマ切替">
+      <svg id="theme-icon-list" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+  </div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="ファイル名で検索..." oninput="handleSearch()">
+    </div>
+    <button class="sort-btn" onclick="toggleSort()">
+      <span id="sort-label">名前</span>
+      <svg id="sort-icon" viewBox="0 0 24 24"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+    </button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="files" onclick="switchTab('files')">ファイル</div>
+    <div class="tab" data-tab="bookmarks" onclick="switchTab('bookmarks')">ブックマーク</div>
+  </div>
+
+  <div class="breadcrumb" id="breadcrumb"></div>
+
+  <div class="file-list" id="file-list"></div>
+
+  <button class="fab" onclick="showNewFileModal()" title="新規作成">+</button>
+</div>
+
+<!-- ═══ VIEWER SCREEN ═══ -->
+<div id="viewer-screen" class="screen">
+  <div class="header">
+    <button class="header-btn" onclick="closeViewer()">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <div class="header-title" id="viewer-title">Markdown</div>
+    <button class="header-btn" id="viewer-bookmark-btn" onclick="toggleViewerBookmark()">
+      <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+    </button>
+    <button class="header-btn" onclick="changeFontSize(-1)" title="文字を小さく" style="font-size:11px;font-weight:700;font-family:sans-serif;">A-</button>
+    <button class="header-btn" onclick="changeFontSize(1)" title="文字を大きく" style="font-size:15px;font-weight:700;font-family:sans-serif;">A+</button>
+    <button class="header-btn" onclick="toggleTheme()" title="テーマ切替">
+      <svg id="theme-icon-viewer" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+    </button>
+    <button class="header-btn" onclick="toggleToc()">
+      <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <button class="header-btn" onclick="editFile()">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    </button>
+  </div>
+  <div class="viewer-content" id="viewer-content"></div>
+  <div class="toc-overlay" id="toc-overlay" onclick="toggleToc()"></div>
+  <div class="toc-panel" id="toc-panel">
+    <div class="toc-header">
+      <span>目次</span>
+      <button class="header-btn" onclick="toggleToc()" style="width:28px;height:28px;">
+        <svg viewBox="0 0 24 24" style="width:18px;height:18px;"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="toc-list" id="toc-list"></div>
+  </div>
+</div>
+
+<!-- ═══ EDITOR SCREEN ═══ -->
+<div id="editor-screen" class="screen">
+  <div class="header">
+    <button class="header-btn" onclick="cancelEdit()">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="header-title" id="editor-title">編集</div>
+    <button class="header-btn" onclick="saveFile()" style="color:var(--green);font-weight:700;">
+      <svg viewBox="0 0 24 24" style="stroke:var(--green);"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+    </button>
+  </div>
+  <div class="editor-area">
+    <textarea class="editor-textarea" id="editor-textarea" spellcheck="false"></textarea>
+  </div>
+</div>
+
+<!-- ═══ SETTINGS MODAL ═══ -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">DriveMD2 API 設定</div>
+    <div class="input-group">
+      <label class="input-label">Backend API Base URL</label>
+      <input type="text" class="input-field" id="api-base-url-input" placeholder="https://your-cloud-run-service.run.app">
+      <span style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block;line-height:1.6;">
+        Cloud Run のベース URL を入力します。末尾の `/` は自動で除去します。
+      </span>
+    </div>
+    <button class="modal-btn" onclick="saveSettings()">保存</button>
+  </div>
+</div>
+
+<!-- ═══ NEW FILE MODAL ═══ -->
+<div class="modal-overlay new-file-modal" id="new-file-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">新規Markdownファイル</div>
+    <div class="input-group">
+      <label class="input-label">ファイル名</label>
+      <input type="text" class="input-field" id="new-file-name" placeholder="example">
+      <span style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block;">.md は自動的に追加されます</span>
+    </div>
+    <button class="modal-btn" onclick="createNewFile()">作成</button>
+  </div>
+</div>
+
+<!-- ═══ TOAST ═══ -->
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_API_BASE_URL = 'https://drivemd2-proxy-6lgmhmjk7a-an.a.run.app';
+
+const STORAGE_KEYS = {
+  apiBaseUrl: 'drivemd2_api_base_url',
+  bookmarks: 'drivemd2_bookmarks',
+  theme: 'drivemd2_theme',
+  fontSize: 'drivemd2_fontsize',
+};
+
+const APP = {
+  apiBaseUrl: normalizeBaseUrl(localStorage.getItem(STORAGE_KEYS.apiBaseUrl) || DEFAULT_API_BASE_URL),
+  files: [],
+  folderStack: [{ id:'root', name:'Obsidian_Vault' }],
+  currentFolder: { id:'root', name:'Obsidian_Vault' },
+  currentFile: null,
+  currentContent: '',
+  bookmarks: loadBookmarks(),
+  sortKey: 'name',
+  sortAsc: true,
+  searchQuery: '',
+  activeTab: 'files',
+};
+
+window.addEventListener('load', () => {
+  initTheme();
+  applyQueryOverrides();
+  document.getElementById('api-base-url-input').value = APP.apiBaseUrl;
+  loadFolder('root');
+});
+
+function applyQueryOverrides() {
+  const params = new URLSearchParams(window.location.search);
+  const value = normalizeBaseUrl(params.get('apiBaseUrl') || '');
+  if (value) {
+    APP.apiBaseUrl = value;
+    localStorage.setItem(STORAGE_KEYS.apiBaseUrl, value);
+  }
+}
+
+function loadBookmarks() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(STORAGE_KEYS.bookmarks) || '{}');
+    return raw && typeof raw === 'object' ? raw : {};
+  } catch (error) {
+    return {};
+  }
+}
+
+function normalizeBaseUrl(raw) {
+  return String(raw || '').trim().replace(/\/+$/, '');
+}
+
+function initTheme() {
+  const theme = localStorage.getItem(STORAGE_KEYS.theme) || 'dark';
+  const size = parseInt(localStorage.getItem(STORAGE_KEYS.fontSize) || '15', 10);
+  if (theme === 'light') document.body.classList.add('light');
+  document.documentElement.style.setProperty('--font-size', size + 'px');
+  updateThemeIcons(theme);
+}
+
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  const theme = isLight ? 'light' : 'dark';
+  localStorage.setItem(STORAGE_KEYS.theme, theme);
+  updateThemeIcons(theme);
+}
+
+function updateThemeIcons(theme) {
+  const moonSvg = '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+  const sunSvg = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+  const svg = theme === 'light' ? moonSvg : sunSvg;
+  ['theme-icon-list', 'theme-icon-viewer'].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) el.innerHTML = svg;
+  });
+}
+
+function changeFontSize(delta) {
+  const current = parseInt(localStorage.getItem(STORAGE_KEYS.fontSize) || '15', 10);
+  const next = Math.min(22, Math.max(11, current + delta));
+  document.documentElement.style.setProperty('--font-size', next + 'px');
+  localStorage.setItem(STORAGE_KEYS.fontSize, String(next));
+  showToast('文字サイズ: ' + next + 'px');
+}
+
+async function apiRequest(path, opts = {}) {
+  if (!APP.apiBaseUrl) {
+    throw new Error('DriveMD2 backend の URL が未設定です');
+  }
+
+  const resp = await fetch(APP.apiBaseUrl + path, {
+    ...opts,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(opts.headers || {}),
+    }
+  });
+
+  if (!resp.ok) {
+    let message = 'API Error: ' + resp.status;
+    try {
+      const data = await resp.json();
+      if (data && data.message) message = data.message;
+      else if (data && data.error) message = data.error;
+    } catch (error) {
+      // ignore
+    }
+    throw new Error(message);
+  }
+
+  return resp.json();
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showSettings() {
+  document.getElementById('api-base-url-input').value = APP.apiBaseUrl;
+  document.getElementById('settings-modal').classList.add('show');
+}
+
+function saveSettings() {
+  const value = normalizeBaseUrl(document.getElementById('api-base-url-input').value);
+  if (!value) {
+    showToast('API Base URL を入力してください');
+    return;
+  }
+  if (!/^https?:\/\//i.test(value)) {
+    showToast('http:// または https:// で始まる URL を入力してください');
+    return;
+  }
+  APP.apiBaseUrl = value;
+  localStorage.setItem(STORAGE_KEYS.apiBaseUrl, value);
+  document.getElementById('settings-modal').classList.remove('show');
+  showToast('設定を保存しました');
+  loadFolder(APP.currentFolder.id || 'root');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => {
+    if (e.target === m) m.classList.remove('show');
+  });
+});
+
+function renderNeedsConfig() {
+  document.getElementById('file-list').innerHTML = `<div class="empty-state">
+    <svg viewBox="0 0 24 24"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+    <p>DriveMD2 backend の URL が未設定です</p>
+    <p style="font-size:12px">Cloud Run の base URL を保存すると一覧を読み込みます</p>
+    <button class="modal-btn" style="width:auto;padding:10px 16px;margin-top:8px" onclick="showSettings()">API設定を開く</button>
+  </div>`;
+}
+
+// ═══ FOLDER NAVIGATION ═══
+async function loadFolder(folderId) {
+  const id = folderId || APP.currentFolder.id || 'root';
+  const listEl = document.getElementById('file-list');
+  listEl.innerHTML = '<div class="spinner"></div>';
+
+  if (!APP.apiBaseUrl) {
+    renderNeedsConfig();
+    return;
+  }
+
+  try {
+    const data = await apiRequest('/api/folders/' + encodeURIComponent(id) + '/children');
+    APP.currentFolder = data.folder || { id, name:'Obsidian_Vault' };
+    APP.folderStack = data.breadcrumbs || [{ id:'root', name:'Obsidian_Vault' }];
+    APP.files = data.items || [];
+    renderBreadcrumb();
+    renderFileList();
+
+    document.getElementById('back-folder-btn').style.display =
+      APP.folderStack.length > 1 ? 'flex' : 'none';
+    document.getElementById('list-title').textContent =
+      APP.currentFolder.name || 'Obsidian_Vault';
+  } catch(e) {
+    listEl.innerHTML = `<div class="empty-state"><p>読み込みエラー</p><p style="font-size:12px">${esc(e.message)}</p></div>`;
+  }
+}
+
+function enterFolder(id) {
+  APP.searchQuery = '';
+  document.getElementById('search-input').value = '';
+  if (APP.activeTab !== 'files') {
+    switchTab('files');
+  }
+  loadFolder(id);
+}
+
+function goUpFolder() {
+  if (APP.folderStack.length <= 1) return;
+  loadFolder(APP.folderStack[APP.folderStack.length - 2].id);
+}
+
+function goToFolder(index) {
+  loadFolder(APP.folderStack[index].id);
+}
+
+function refreshList() {
+  loadFolder(APP.currentFolder.id || 'root');
+}
+
+// ═══ BREADCRUMB ═══
+function renderBreadcrumb() {
+  const el = document.getElementById('breadcrumb');
+  if (APP.folderStack.length <= 1) { el.innerHTML = ''; return; }
+  el.innerHTML = APP.folderStack.map((f, i) => {
+    if (i === APP.folderStack.length - 1) return `<span class="bc-current">${esc(f.name)}</span>`;
+    return `<span class="bc-item" onclick="goToFolder(${i})">${esc(f.name)}</span><span class="bc-sep">›</span>`;
+  }).join('');
+  el.scrollLeft = el.scrollWidth;
+}
+
+// ═══ RENDER FILES ═══
+function renderFileList() {
+  const listEl = document.getElementById('file-list');
+
+  if (APP.activeTab === 'bookmarks') {
+    renderBookmarks();
+    return;
+  }
+
+  let files = [...APP.files];
+
+  if (APP.searchQuery) {
+    const q = APP.searchQuery.toLowerCase();
+    files = files.filter(f => f.name.toLowerCase().includes(q));
+  }
+
+  files.sort((a, b) => {
+    if (!!a.isFolder !== !!b.isFolder) return a.isFolder ? -1 : 1;
+
+    let cmp = 0;
+    if (APP.sortKey === 'name') {
+      cmp = a.name.localeCompare(b.name, 'ja');
+    } else {
+      cmp = (a.modifiedTime || '').localeCompare(b.modifiedTime || '');
+    }
+    return APP.sortAsc ? cmp : -cmp;
+  });
+
+  if (files.length === 0) {
+    listEl.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <p>${APP.searchQuery ? '検索結果なし' : 'ファイルがありません'}</p>
+    </div>`;
+    return;
+  }
+
+  listEl.innerHTML = files.map(f => {
+    const isFolder = !!f.isFolder;
+    const isMd = isMarkdownFile(f.name, f.mimeType);
+    const iconClass = isFolder ? 'folder' : (isMd ? 'md' : 'other');
+    const iconSvg = isFolder
+      ? '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+    const date = f.modifiedTime ? formatDate(f.modifiedTime) : '';
+    const bm = APP.bookmarks[f.id] ? 'active' : '';
+    const onclick = isFolder
+      ? `onclick="enterFolder('${jsString(f.id)}')"` 
+      : (isMd ? `onclick="openFile('${jsString(f.id)}','${jsString(f.name)}')"` : '');
+
+    return `<div class="file-item" ${onclick}>
+      <div class="file-icon ${iconClass}">${iconSvg}</div>
+      <div class="file-info">
+        <div class="file-name">${esc(f.name)}</div>
+        <div class="file-meta">${date}</div>
+      </div>
+      <button class="file-bookmark ${bm}" onclick="event.stopPropagation();toggleBookmark('${jsString(f.id)}','${jsString(f.name)}',${isFolder},this)">
+        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+// ═══ BOOKMARKS ═══
+function renderBookmarks() {
+  const listEl = document.getElementById('file-list');
+  const bms = Object.entries(APP.bookmarks);
+  if (bms.length === 0) {
+    listEl.innerHTML = `<div class="empty-state">
+      <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      <p>ブックマークなし</p>
+    </div>`;
+    return;
+  }
+  listEl.innerHTML = bms.map(([id, val]) => {
+    const name = typeof val === 'object' ? val.name : val;
+    const isFolder = typeof val === 'object' ? val.isFolder : false;
+    const action = isFolder ? `switchTab('files');enterFolder('${jsString(id)}')` : `openFile('${jsString(id)}','${jsString(name)}')`;
+    const iconSvg = isFolder
+      ? '<svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2z"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+    const iconClass = isFolder ? 'folder' : 'md';
+    return `<div class="file-item" onclick="${action}">
+      <div class="file-icon ${iconClass}">${iconSvg}</div>
+      <div class="file-info"><div class="file-name">${esc(name)}</div></div>
+      <button class="file-bookmark active" onclick="event.stopPropagation();removeBookmark('${jsString(id)}')">
+        <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+      </button>
+    </div>`;
+  }).join('');
+}
+
+function toggleBookmark(id, name, isFolder, btn) {
+  if (APP.bookmarks[id]) {
+    delete APP.bookmarks[id];
+    btn.classList.remove('active');
+  } else {
+    APP.bookmarks[id] = { name, isFolder };
+    btn.classList.add('active');
+  }
+  localStorage.setItem(STORAGE_KEYS.bookmarks, JSON.stringify(APP.bookmarks));
+}
+
+function removeBookmark(id) {
+  delete APP.bookmarks[id];
+  localStorage.setItem(STORAGE_KEYS.bookmarks, JSON.stringify(APP.bookmarks));
+  renderBookmarks();
+}
+
+function toggleViewerBookmark() {
+  if (!APP.currentFile) return;
+  const btn = document.getElementById('viewer-bookmark-btn');
+  if (APP.bookmarks[APP.currentFile.id]) {
+    delete APP.bookmarks[APP.currentFile.id];
+    btn.querySelector('svg').style.fill = 'none';
+    btn.style.color = '';
+  } else {
+    APP.bookmarks[APP.currentFile.id] = { name: APP.currentFile.name, isFolder: false };
+    btn.querySelector('svg').style.fill = 'var(--yellow)';
+    btn.style.color = 'var(--yellow)';
+  }
+  localStorage.setItem(STORAGE_KEYS.bookmarks, JSON.stringify(APP.bookmarks));
+}
+
+// ═══ SORT / SEARCH / TABS ═══
+function toggleSort() {
+  if (APP.sortKey === 'name' && APP.sortAsc) {
+    APP.sortAsc = false;
+  } else if (APP.sortKey === 'name') {
+    APP.sortKey = 'date'; APP.sortAsc = false;
+  } else if (APP.sortKey === 'date' && !APP.sortAsc) {
+    APP.sortAsc = true;
+  } else {
+    APP.sortKey = 'name'; APP.sortAsc = true;
+  }
+  document.getElementById('sort-label').textContent = APP.sortKey === 'name' ? '名前' : '日付';
+  document.getElementById('sort-icon').style.transform = APP.sortAsc ? '' : 'rotate(180deg)';
+  renderFileList();
+}
+
+function handleSearch() {
+  APP.searchQuery = document.getElementById('search-input').value;
+  renderFileList();
+}
+
+function switchTab(tab) {
+  APP.activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  renderFileList();
+}
+
+// ═══ VIEWER ═══
+async function openFile(id, name) {
+  APP.currentFile = { id, name };
+  document.getElementById('viewer-title').textContent = name;
+  showScreen('viewer-screen');
+
+  const btn = document.getElementById('viewer-bookmark-btn');
+  if (APP.bookmarks[id]) {
+    btn.querySelector('svg').style.fill = 'var(--yellow)';
+    btn.style.color = 'var(--yellow)';
+  } else {
+    btn.querySelector('svg').style.fill = 'none';
+    btn.style.color = '';
+  }
+
+  const vc = document.getElementById('viewer-content');
+  vc.innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const data = await apiRequest('/api/files/' + encodeURIComponent(id) + '/content');
+    APP.currentFile = data.file || APP.currentFile;
+    APP.currentContent = data.content || '';
+    document.getElementById('viewer-title').textContent = APP.currentFile.name || name;
+    renderMarkdown(APP.currentContent);
+  } catch(e) {
+    vc.innerHTML = `<div class="empty-state"><p>読み込みエラー</p><p style="font-size:12px">${esc(e.message)}</p></div>`;
+  }
+}
+
+function renderMarkdown(text) {
+  const vc = document.getElementById('viewer-content');
+  marked.setOptions({
+    highlight: function(code, lang) {
+      if (lang && hljs.getLanguage(lang)) {
+        return hljs.highlight(code, { language: lang }).value;
+      }
+      return hljs.highlightAuto(code).value;
+    },
+    breaks: true,
+    gfm: true,
+  });
+  vc.innerHTML = marked.parse(text);
+  vc.querySelectorAll('a[href]').forEach(a => {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.addEventListener('click', event => {
+      event.preventDefault();
+      window.open(a.href, '_blank', 'noopener');
+    });
+  });
+  vc.scrollTop = 0;
+  buildToc();
+}
+
+function buildToc() {
+  const headings = document.getElementById('viewer-content').querySelectorAll('h1, h2, h3');
+  const list = document.getElementById('toc-list');
+  if (headings.length === 0) {
+    list.innerHTML = '<div style="padding:16px;color:var(--text-muted);">見出しなし</div>';
+    return;
+  }
+  list.innerHTML = Array.from(headings).map((h, i) => {
+    h.id = 'heading-' + i;
+    const level = parseInt(h.tagName.charAt(1));
+    return `<button class="toc-item" data-level="${level}" onclick="jumpToHeading('heading-${i}')">${esc(h.textContent)}</button>`;
+  }).join('');
+}
+
+function jumpToHeading(id) {
+  document.getElementById(id).scrollIntoView({ behavior:'smooth', block:'start' });
+  toggleToc();
+}
+
+function toggleToc() {
+  document.getElementById('toc-panel').classList.toggle('open');
+  document.getElementById('toc-overlay').classList.toggle('show');
+}
+
+function closeViewer() {
+  showScreen('list-screen');
+}
+
+// ═══ EDITOR ═══
+function editFile() {
+  document.getElementById('editor-title').textContent = APP.currentFile.name;
+  document.getElementById('editor-textarea').value = APP.currentContent;
+  showScreen('editor-screen');
+}
+
+function cancelEdit() {
+  showScreen('viewer-screen');
+}
+
+async function saveFile() {
+  const content = document.getElementById('editor-textarea').value;
+  try {
+    const data = await apiRequest('/api/files/' + encodeURIComponent(APP.currentFile.id) + '/content', {
+      method: 'PATCH',
+      body: JSON.stringify({ content }),
+    });
+
+    if (data && data.file) APP.currentFile = { ...APP.currentFile, ...data.file };
+    APP.currentContent = content;
+    renderMarkdown(content);
+    showScreen('viewer-screen');
+    showToast('保存しました');
+    loadFolder(APP.currentFolder.id || 'root');
+  } catch(e) {
+    showToast('保存エラー: ' + e.message);
+  }
+}
+
+// ═══ NEW FILE ═══
+function showNewFileModal() {
+  document.getElementById('new-file-name').value = '';
+  document.getElementById('new-file-modal').classList.add('show');
+  setTimeout(() => document.getElementById('new-file-name').focus(), 300);
+}
+
+async function createNewFile() {
+  let name = document.getElementById('new-file-name').value.trim();
+  if (!name) { showToast('ファイル名を入力してください'); return; }
+  if (!name.endsWith('.md')) name += '.md';
+
+  const folderId = APP.currentFolder.id || 'root';
+  try {
+    const initContent = `# ${name.replace('.md','')}\n\n`;
+    const data = await apiRequest('/api/files', {
+      method: 'POST',
+      body: JSON.stringify({
+        parentId: folderId,
+        name: name,
+        content: initContent,
+      }),
+    });
+
+    document.getElementById('new-file-modal').classList.remove('show');
+    showToast(`${name} を作成しました`);
+    await loadFolder(folderId);
+
+    APP.currentFile = { id: data.file.id, name: data.file.name, parentId: data.file.parentId };
+    APP.currentContent = initContent;
+    document.getElementById('editor-title').textContent = data.file.name;
+    document.getElementById('editor-textarea').value = initContent;
+    showScreen('editor-screen');
+
+  } catch(e) {
+    showToast('作成エラー: ' + e.message);
+  }
+}
+
+// ═══ UTIL ═══
+function isMarkdownFile(name, mimeType) {
+  const lower = String(name || '').toLowerCase();
+  return lower.endsWith('.md') || lower.endsWith('.markdown') || String(mimeType || '').toLowerCase().includes('markdown');
+}
+
+function jsString(value) {
+  return String(value)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "\\'")
+    .replace(/\r/g, '\\r')
+    .replace(/\n/g, '\\n');
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function formatDate(iso) {
+  const d = new Date(iso);
+  const now = new Date();
+  const diff = now - d;
+  if (diff < 60000) return 'たった今';
+  if (diff < 3600000) return Math.floor(diff/60000) + '分前';
+  if (diff < 86400000) return Math.floor(diff/3600000) + '時間前';
+  if (diff < 604800000) return Math.floor(diff/86400000) + '日前';
+  return d.getFullYear() + '/' + (d.getMonth()+1) + '/' + d.getDate();
+}
+
+function showToast(msg, duration) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => t.classList.remove('show'), duration || 2500);
+}
+</script>
+</body>
+</html>
