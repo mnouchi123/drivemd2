@@ -202,6 +202,7 @@ body {
 .tab.active { color:var(--text-primary); border-bottom-color:var(--accent); }
 
 /* Breadcrumb */
+.masked-input { -webkit-text-security: disc; font-size: 16px; }
 .breadcrumb {
   display:flex; align-items:center; gap:4px; padding:8px 16px;
   font-size:13px; color:var(--text-muted); overflow-x:auto;
@@ -477,7 +478,10 @@ body {
     </div>
     <div class="input-group">
       <label class="input-label">API キー</label>
-      <input type="password" class="input-field" id="api-key-input" placeholder="Cloud Run に設定したキー" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <div style="display:flex;gap:8px;align-items:center;">
+        <input type="text" class="input-field masked-input" id="api-key-input" name="drivemd2-access-token" placeholder="Cloud Run に設定したキー" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore data-lpignore="true" style="flex:1;min-width:0;">
+        <button type="button" class="modal-btn" style="width:auto;padding:10px 12px;margin:0;white-space:nowrap;" onclick="pasteApiKey()">貼り付け</button>
+      </div>
       <span style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block;line-height:1.6;">
         この端末のブラウザにだけ保存されます。端末ごとに一度入力してください。
       </span>
@@ -638,6 +642,24 @@ function showSettings() {
   document.getElementById('api-base-url-input').value = APP.apiBaseUrl;
   document.getElementById('api-key-input').value = APP.apiKey;
   document.getElementById('settings-modal').classList.add('show');
+}
+
+async function pasteApiKey() {
+  const input = document.getElementById('api-key-input');
+  if (!navigator.clipboard || !navigator.clipboard.readText) {
+    input.focus();
+    showToast('欄を長押しして「ペースト」してください');
+    return;
+  }
+  try {
+    const text = (await navigator.clipboard.readText()).trim();
+    if (!text) { showToast('クリップボードが空です'); return; }
+    input.value = text;
+    showToast('貼り付けました。「保存」を押してください');
+  } catch (error) {
+    input.focus();
+    showToast('貼り付けできませんでした。欄を長押しして「ペースト」してください');
+  }
 }
 
 function saveSettings() {
