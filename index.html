@@ -408,7 +408,7 @@ body {
 
   <div class="file-list" id="file-list"></div>
 
-  <button class="fab" onclick="showNewFileModal()" title="新規作成">+</button>
+  <button class="fab" id="new-file-fab" onclick="showNewFileModal()" title="新規作成">+</button>
 </div>
 
 <!-- ═══ VIEWER SCREEN ═══ -->
@@ -418,7 +418,7 @@ body {
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
     <div class="header-title" id="viewer-title">Markdown</div>
-    <button class="header-btn" id="viewer-select-all-btn" onclick="selectAllViewerContent()" title="全文選択" style="display:none;font-size:11px;font-weight:700;font-family:sans-serif;">ALL</button>
+    <button class="header-btn" id="viewer-select-all-btn" onclick="selectAllViewerContent()" title="全文コピー" style="display:none;font-size:11px;font-weight:700;font-family:sans-serif;">ALL</button>
     <button class="header-btn" id="viewer-bookmark-btn" onclick="toggleViewerBookmark()">
       <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
     </button>
@@ -475,6 +475,13 @@ body {
         Cloud Run のベース URL を入力します。末尾の `/` は自動で除去します。
       </span>
     </div>
+    <div class="input-group">
+      <label class="input-label">API キー</label>
+      <input type="password" class="input-field" id="api-key-input" placeholder="Cloud Run に設定したキー" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <span style="font-size:12px;color:var(--text-muted);margin-top:4px;display:block;line-height:1.6;">
+        この端末のブラウザにだけ保存されます。端末ごとに一度入力してください。
+      </span>
+    </div>
     <button class="modal-btn" onclick="saveSettings()">保存</button>
   </div>
 </div>
@@ -501,6 +508,7 @@ const DEFAULT_API_BASE_URL = 'https://drivemd2-proxy-6lgmhmjk7a-an.a.run.app';
 
 const STORAGE_KEYS = {
   apiBaseUrl: 'drivemd2_api_base_url',
+  apiKey: 'drivemd2_api_key',
   bookmarks: 'drivemd2_bookmarks',
   theme: 'drivemd2_theme',
   fontSize: 'drivemd2_fontsize',
@@ -508,6 +516,7 @@ const STORAGE_KEYS = {
 
 const APP = {
   apiBaseUrl: normalizeBaseUrl(localStorage.getItem(STORAGE_KEYS.apiBaseUrl) || DEFAULT_API_BASE_URL),
+  apiKey: localStorage.getItem(STORAGE_KEYS.apiKey) || '',
   files: [],
   folderStack: [{ id:'root', name:'Obsidian_Vault' }],
   currentFolder: { id:'root', name:'Obsidian_Vault' },
@@ -586,14 +595,24 @@ async function apiRequest(path, opts = {}) {
   if (!APP.apiBaseUrl) {
     throw new Error('DriveMD2 backend の URL が未設定です');
   }
+  if (!APP.apiKey) {
+    showSettings();
+    throw new Error('API キーが未設定です。設定画面で入力してください');
+  }
 
   const resp = await fetch(APP.apiBaseUrl + path, {
     ...opts,
     headers: {
       'Content-Type': 'application/json',
+      'X-DriveMD2-Key': APP.apiKey,
       ...(opts.headers || {}),
     }
   });
+
+  if (resp.status === 401) {
+    showSettings();
+    throw new Error('API キーが正しくありません。設定画面で確認してください');
+  }
 
   if (!resp.ok) {
     let message = 'API Error: ' + resp.status;
@@ -617,6 +636,7 @@ function showScreen(id) {
 
 function showSettings() {
   document.getElementById('api-base-url-input').value = APP.apiBaseUrl;
+  document.getElementById('api-key-input').value = APP.apiKey;
   document.getElementById('settings-modal').classList.add('show');
 }
 
@@ -630,8 +650,15 @@ function saveSettings() {
     showToast('http:// または https:// で始まる URL を入力してください');
     return;
   }
+  const apiKey = document.getElementById('api-key-input').value.trim();
+  if (!apiKey) {
+    showToast('API キーを入力してください');
+    return;
+  }
   APP.apiBaseUrl = value;
+  APP.apiKey = apiKey;
   localStorage.setItem(STORAGE_KEYS.apiBaseUrl, value);
+  localStorage.setItem(STORAGE_KEYS.apiKey, apiKey);
   document.getElementById('settings-modal').classList.remove('show');
   showToast('設定を保存しました');
   loadFolder(APP.currentFolder.id || 'root');
@@ -673,6 +700,9 @@ async function loadFolder(folderId) {
 
     document.getElementById('back-folder-btn').style.display =
       APP.folderStack.length > 1 ? 'flex' : 'none';
+    // The virtual top level is a list of shared folders; files cannot be created there.
+    document.getElementById('new-file-fab').style.display =
+      APP.currentFolder.id === 'top' ? 'none' : '';
     document.getElementById('list-title').textContent =
       APP.currentFolder.name || 'Obsidian_Vault';
   } catch(e) {
@@ -956,24 +986,93 @@ function editFile() {
   showScreen('editor-screen');
 }
 
-function selectAllViewerContent() {
-  const content = document.getElementById('viewer-content');
-  if (!content || !content.textContent.trim()) {
-    showToast('選択できる本文がありません');
-    return;
-  }
-
+function selectViewerContent(content) {
   const selection = window.getSelection ? window.getSelection() : null;
-  if (!selection || !document.createRange) {
-    showToast('このブラウザでは全文選択に対応していません');
-    return;
+  if (!content || !selection || !document.createRange) {
+    return false;
   }
 
   const range = document.createRange();
   range.selectNodeContents(content);
   selection.removeAllRanges();
   selection.addRange(range);
-  showToast('全文を選択しました。Ctrl+C でコピーできます');
+  return true;
+}
+
+async function copyText(text) {
+  const normalized = String(text || '').trim();
+  if (!normalized) return false;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    try {
+      await navigator.clipboard.writeText(normalized);
+      return true;
+    } catch (error) {
+      // Fall through to legacy copy.
+    }
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = normalized;
+  textarea.setAttribute('readonly', '');
+  textarea.setAttribute('aria-hidden', 'true');
+  textarea.style.position = 'fixed';
+  textarea.style.top = '0';
+  textarea.style.left = '-9999px';
+  textarea.style.width = '1px';
+  textarea.style.height = '1px';
+  textarea.style.opacity = '0';
+  textarea.style.fontSize = '16px';
+  textarea.style.pointerEvents = 'none';
+  document.body.appendChild(textarea);
+
+  try {
+    textarea.focus();
+    textarea.select();
+    textarea.setSelectionRange(0, textarea.value.length);
+
+    if (typeof document.execCommand === 'function' && document.execCommand('copy')) {
+      return true;
+    }
+  } catch (error) {
+    // Fall through to the final false return.
+  } finally {
+    textarea.remove();
+  }
+
+  if (typeof document.execCommand === 'function') {
+    try {
+      return document.execCommand('copy');
+    } catch (error) {
+      return false;
+    }
+  }
+
+  return false;
+}
+
+async function selectAllViewerContent() {
+  const content = document.getElementById('viewer-content');
+  const renderedText = content ? (content.innerText || content.textContent || '') : '';
+  const text = String(renderedText || APP.currentContent || '').trim();
+  if (!text) {
+    showToast('コピーできる本文がありません');
+    return;
+  }
+
+  const selected = selectViewerContent(content);
+  const copied = await copyText(text);
+  if (copied) {
+    const selection = window.getSelection ? window.getSelection() : null;
+    if (selection) selection.removeAllRanges();
+    showToast('全文をコピーしました');
+    return;
+  }
+  if (selected) {
+    showToast('全文を選択しました。表示されたメニューからコピーしてください');
+    return;
+  }
+  showToast('このブラウザでは全文コピーに対応していません');
 }
 
 function cancelEdit() {
